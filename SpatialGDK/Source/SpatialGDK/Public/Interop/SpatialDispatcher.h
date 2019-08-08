@@ -15,6 +15,10 @@
 
 #include "SpatialDispatcher.generated.h"
 
+namespace gdk {
+	class SpatialOsWorker;
+}   // namespace gdk
+
 DECLARE_LOG_CATEGORY_EXTERN(LogSpatialView, Log, All);
 
 class USpatialNetDriver;
@@ -31,6 +35,7 @@ public:
 
 	void Init(USpatialNetDriver* NetDriver);
 	void ProcessOps(Worker_OpList* OpList);
+	void ProcessOps(const gdk::SpatialOsWorker& Worker);
 	// The following 2 methods should *only* be used by the Startup OpList Queueing flow
 	// from the SpatialNetDriver, and should be temporary since an alternative solution will be available via the Worker SDK soon.
 	void MarkOpToSkip(const Worker_Op* Op);
