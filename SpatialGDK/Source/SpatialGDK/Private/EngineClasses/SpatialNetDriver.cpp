@@ -1226,15 +1226,13 @@ void USpatialNetDriver::TickDispatch(float DeltaTime)
 	// Not calling Super:: on purpose.
 	UNetDriver::TickDispatch(DeltaTime);
 
-	if (!Connection->IsConnected())
+	if (Connection == nullptr || !Connection->IsConnected())
 	{
 		return;
 	}
 
-	const auto& Worker = Connection->GetWorker();
-	Dispatcher->ProcessOps(Worker);
 	Connection->Advance();
-	return;
+	Dispatcher->ProcessOps(Connection->GetWorker());
 }
 
 void USpatialNetDriver::ProcessRemoteFunction(
@@ -1372,6 +1370,11 @@ void USpatialNetDriver::TickFlush(float DeltaTime)
 	// Tick the timer manager
 	{
 		TimerManager.Tick(DeltaTime);
+	}
+
+	if (Connection != nullptr && Connection->IsConnected())
+	{
+		Connection->FlushMessageToSend();
 	}
 
 	Super::TickFlush(DeltaTime);
